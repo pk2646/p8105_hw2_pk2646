@@ -17,7 +17,7 @@ library(readxl)
 
 Read the Mr. Trashwheel dataset. 
 
-```{r}
+```{r read_clean_1}
 trashwheel_df = 
   read_xlsx(
     "./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
@@ -34,7 +34,7 @@ trashwheel_df =
 ### Part 2 
 Read and clean the 2017 and 2018 Precipitation data. 
 
-```{r}
+```{r read_clean_2}
 precip_2018 = 
   read_excel(
     "./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
@@ -58,5 +58,23 @@ precip_2017 =
   relocate(year)
 ```
 
+Combine the 2017 and 2018 datasets by creating a new dataframe precip_df.
+
+```{r join_1}
+month_df = 
+  tibble(
+    month = 1:12,
+    month_name = month.name
+  )
+
+precip_df = 
+  bind_rows(precip_2017, precip_2018)
+
+precip_joined = left_join(precip_df, month_df, by = "month")
+```
+
+### Part 3 
+
+This dataset contains information from the Mr. Trash Wheel collector in Baltimore, Maryland. The trash wheel collects trash and stores it in the dumpster. The dataset contains information on year, month, and trash collected and including specific type of trash. There are a total of `r nrow(trashwheel_df)` rows in our final dataset. Additional data sheets include month precipitation data. The total precipitation in 2018 is `r sum(pull(precip_2018, total))`. The median number of sports balls in a dumpster in 2017 is `r median(pull(trashwheel_df,sports_balls))`
 
 

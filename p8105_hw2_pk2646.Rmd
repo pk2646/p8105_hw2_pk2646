@@ -1,87 +1,62 @@
 ---
-title: "Homework 1"
+title: "Homework 2"
 author: Pallavi Krishnamurthy
-output: html_document
+output: github_document
 ---
 
-This is my solution to Homework one.
+This is my solution to Homework two.
 
 ```{r lib_calls}
 library(tidyverse)
+library(readxl)
 ```
 
-# problem 1 
+## Problem 1 
 
-## Part 1 :
+### Part 1 
 
-Create a data frame with specified elements 
--a random sample of size 10 from a standard Normal distribution
--a logical vector indicating whether elements of the sample are greater than 0
--a character vector of length 10
--a factor vector of length 10, with 3 different factor “levels”
+Read the Mr. Trashwheel dataset. 
 
-```{r dataframe}
-prob1_df =
-tibble(
-  samp = rnorm(10),
-  samp_gt_0 = samp > 0, 
-  char_vec = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
-  factor_vec = factor(c("low","low", "low", "mod", "mod", "mod", "high", "high", "high", "high"))
-)
+```{r}
+trashwheel_df = 
+  read_xlsx(
+    "./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+    sheet = "Mr. Trash Wheel",
+    range = cell_cols("A:N")) %>% 
+  janitor::clean_names() %>% 
+  drop_na(dumpster) %>% 
+  mutate(
+    sports_balls = round(sports_balls),
+    sports_balls = as.integer(sports_balls)
+  )
 ```
 
-Take the mean of each variable in the data frame prob1_df.
+### Part 2 
+Read and clean the 2017 and 2018 Precipitation data. 
 
-```{r dataset_mean}
-mean(pull(prob1_df, samp)) 
-mean(pull(prob1_df, samp_gt_0))
-mean(pull(prob1_df, char_vec))
-mean(pull(prob1_df, factor_vec))
+```{r}
+precip_2018 = 
+  read_excel(
+    "./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+    sheet = "2018 Precipitation",
+    skip = 1
+  ) %>% 
+  janitor::clean_names() %>% 
+  drop_na(month) %>% 
+  mutate(year = 2018) %>% 
+  relocate(year)
+
+precip_2017 = 
+  read_excel(
+    "./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+    sheet = "2017 Precipitation",
+    skip = 1
+  ) %>% 
+  janitor::clean_names() %>% 
+  drop_na(month) %>% 
+  mutate(year = 2017) %>% 
+  relocate(year)
 ```
 
-Answer - The mean of a random sample of size 10 from a standard Normal distribution and the logical vector greater than zero gives a numeric result that is correct. However, the mean of the character vector and factor vector does not give a numeric results because it does not make sense to take the mean of "a", "b", "c", ... or "low", "mod" and "high". Hence, R gives a warning message that the argument if not numeric or logical : returning NA (Not Applicable). 
 
-Explicitly convert variables from one type to another. Here we convert variables to numeric type. 
-
-```{r covert_type_1, warning=FALSE, results='hide'}
-as.numeric(pull(prob1_df, samp)) 
-as.numeric(pull(prob1_df, samp_gt_0)) 
-as.numeric(pull(prob1_df, char_vec)) 
-as.numeric(pull(prob1_df, factor_vec)) 
-```
-
-Answer - The results for character vector is still not applicable. This is correct. The results for factor variable now yields a numeric value. This is because R forces the factor vector to take a numeric value when we explicitly change the variable type to numeric. We have to be cautious while changing types to make sure the results make sense. 
-
-## Part2:
-
-convert the logical vector to numeric, and multiply the random sample by the result
-convert the logical vector to a factor, and multiply the random sample by the result
-convert the logical vector to a factor and then convert the result to numeric, and multiply the random sample by the result
-
-```{r covert_type_2}
-as.numeric(pull(prob1_df, samp_gt_0)) * pull(prob1_df, samp)
-as.factor(pull(prob1_df, samp_gt_0)) * pull(prob1_df, samp)
-as.numeric(as.factor(pull(prob1_df, samp_gt_0))) * pull(prob1_df, samp)
-```
-
-Answer - We can see that factor vector simply multiplied by a numeric value does not yield a numeric result. (This is correct). However, when we change the type to numeric we get a numeric result that may not be correct. 
-
-# Problem 2 
-
-```{r dataset_penguins}
-data("penguins", package = "palmerpenguins")
-```
-
-The penguins dataset has the the following variable names - `r names(penguins)`. The species are `r levels(penguins$species)` with `r count(filter(penguins, species == 'Adelie'))`, `r count(filter(penguins, species == 'Chinstrap'))` and `r count(filter(penguins, species == 'Gentoo'))` number of penguins for each species, respectively, and the islands are namely `r levels(penguins$island)` with `r count(filter(penguins, island == 'Biscoe'))`, `r count(filter(penguins, island == 'Dream'))` and `r count(filter(penguins, island == 'Torgersen'))` number of penguins for each island, respectively. The average bill length is `r mean(penguins$bill_length_mm, na.rm = TRUE)` and bill depth is `r mean(penguins$bill_depth_mm, na.rm = TRUE)`. The average body mass is `r mean(penguins$body_mass_g, na.rm = TRUE)`. The dataset has `r ncol(penguins)` variables and `r nrow(penguins)` observations. The mean flipper length is `r mean(penguins$flipper_length_mm, na.rm = TRUE)`. 
-
-## Scatterplot flipper length vs bill length. 
-
-```{r scatterplot}
-penguin_length_plot = ggplot(data = penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) +
-  geom_point() +
-  xlab("Bill Length (mm)") + ylab("Flipper Length (mm)")
-  penguin_length_plot
-
-ggsave("penguin_length_plot.pdf")
-```
 

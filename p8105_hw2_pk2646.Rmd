@@ -77,4 +77,30 @@ precip_joined = left_join(precip_df, month_df, by = "month")
 
 This dataset contains information from the Mr. Trash Wheel collector in Baltimore, Maryland. The trash wheel collects trash and stores it in the dumpster. The dataset contains information on year, month, and trash collected and including specific type of trash. There are a total of `r nrow(trashwheel_df)` rows in our final dataset. Additional data sheets include month precipitation data. The total precipitation in 2018 is `r sum(pull(precip_2018, total))`. The median number of sports balls in a dumpster in 2017 is `r median(pull(trashwheel_df,sports_balls))`
 
+## Problem 2 
+
+### Part 1 
+
+Read and clean NYC transit dataset. 
+
+```{r read_clean_3}
+transit_df = (
+  read_csv(file = "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
+  janitor::clean_names() %>% 
+  select(line:entry, vending, ada)
+  )
+```
+
+
+```{r char_logic}
+transit_df$entry[transit_df$entry == "YES"] = 1
+transit_df$entry[transit_df$entry == "NO"] = 0
+transit_df$entry = as.integer(transit_df$entry)
+```
+
+This dataset contains information on th NYC transit system. The following information is available in this dataset `r names(transit_df)`.The data cleaning steps included clean_names function to convert all the variable names to readable forms using snake case and only the important variables we case about are selected in the dataset. The dimensions of the dataset are `r nrow(transit_df)*ncol(transit_df)`. The number of variables in the dataset are `r ncol(transit_df)` and the number of observations in the dataset are `r nrow(transit_df)`. This dataset is now tidy. 
+
+
+
+
 

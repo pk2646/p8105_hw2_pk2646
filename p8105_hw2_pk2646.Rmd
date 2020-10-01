@@ -100,6 +100,76 @@ transit_df$entry = as.integer(transit_df$entry)
 
 This dataset contains information on th NYC transit system. The following information is available in this dataset `r names(transit_df)`.The data cleaning steps included clean_names function to convert all the variable names to readable forms using snake case and only the important variables we case about are selected in the dataset. The dimensions of the dataset are `r nrow(transit_df)*ncol(transit_df)`. The number of variables in the dataset are `r ncol(transit_df)` and the number of observations in the dataset are `r nrow(transit_df)`. This dataset is now tidy. 
 
+### Part 2
+
+How many distinct stations are there?
+
+```{r distint_stations}
+x = nrow(distinct(transit_df, station_name, line))
+```
+
+The number of distinct stations are `r x`. 
+
+How many stations are ADA compliant?
+
+```{r}
+y = (filter(transit_df, ada == "TRUE") %>% 
+distinct(station_name, line) %>% 
+count())
+```
+
+There are `r print(y)`ADA compliant stations. 
+
+What proportion of station entrances / exits without vending allow entrance?
+
+```{r}
+a = count(filter(transit_df, vending == "NO" ))
+b = (count(filter(transit_df, vending == "NO", entry == "1")))
+c = b/a
+```
+
+The proportion of station entrances / exits without vending that allow entrance is `r print(c)`. 
+
+Reformat data so that route number and route name are distinct variables.  
+
+```{r}
+transit_df = 
+  mutate(transit_df, 
+         route8 = as.character(route8)) %>% 
+  mutate(route9 = as.character(route9)) %>% 
+  mutate(route10 = as.character(route10)) %>% 
+  mutate(route11 = as.character(route11))
+
+transit_df =         
+   pivot_longer(
+    transit_df,
+    route1:route11,
+    names_to = "route_number", 
+    values_to = "route_name")
+```
+
+How many distinct stations serve the A train?
+
+```{r}
+d = (filter(transit_df, route_name == "A") %>% 
+distinct(station_name, line) %>% 
+count())
+```
+
+The number of distinct stations that serve A train is `r print(d)`. 
+
+Of the stations that serve the A train, how many are ADA compliant?
+
+```{r}
+e = (filter(transit_df, route_name == "A", ada == "TRUE") %>% 
+distinct(station_name, line) %>% 
+count())
+```
+
+Of the stations that serve the A train, `r print(e)` are ADA compliant.
+
+
+
 
 
 

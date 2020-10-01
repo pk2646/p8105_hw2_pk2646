@@ -244,4 +244,7 @@ poll_data_joined =
   left_join(polls_df, polls2_df, polls3_df,  by = c("year", "month"))
 ```
 
+## Summary 
+
+This dataset contains information on the two party political system in the US. Information on the democratic and republic parties include the following variables `r names(poll_data_joined)`. The polls_df dataset contains information numbers of democratic and republican presidents, governers and senates along with their numbers between years `r range(pull(polls_df, year))`. The polls2_df dataset contains information numbers  along with their numbers between years `r range(pull(polls2_df, year))`. The third dataset containd information on unemployment through the years `r range(pull(polls3_df, year))`. The final dataset poll_data_joined is a dataset will all the three datasets joined together from years `r range(pull(poll_data_joined, year))` and the dimensions of the dataset are `r nrow(poll_data_joined)*ncol(poll_data_joined)`. The number of variables in the dataset are `r ncol(poll_data_joined)` and the number of observations in the dataset are `r nrow(poll_data_joined)`. This dataset is now tidy. 
 

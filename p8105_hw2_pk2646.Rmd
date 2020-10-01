@@ -118,7 +118,7 @@ distinct(station_name, line) %>%
 count())
 ```
 
-There are `r print(y)`ADA compliant stations. 
+There are `r y` ADA compliant stations. 
 
 What proportion of station entrances / exits without vending allow entrance?
 
@@ -128,7 +128,7 @@ b = (count(filter(transit_df, vending == "NO", entry == "1")))
 c = b/a
 ```
 
-The proportion of station entrances / exits without vending that allow entrance is `r print(c)`. 
+The proportion of station entrances / exits without vending that allow entrance is `r c`. 
 
 Reformat data so that route number and route name are distinct variables.  
 
@@ -156,7 +156,7 @@ distinct(station_name, line) %>%
 count())
 ```
 
-The number of distinct stations that serve A train is `r print(d)`. 
+The number of distinct stations that serve A train is `r d`. 
 
 Of the stations that serve the A train, how many are ADA compliant?
 
@@ -166,7 +166,7 @@ distinct(station_name, line) %>%
 count())
 ```
 
-Of the stations that serve the A train, `r print(e)` are ADA compliant.
+Of the stations that serve the A train, `r e` are ADA compliant.
 
 ## Problem 3 
 
@@ -246,5 +246,5 @@ poll_data_joined =
 
 ## Summary 
 
-This dataset contains information on the two party political system in the US. Information on the democratic and republic parties include the following variables `r names(poll_data_joined)`. The polls_df dataset contains information numbers of democratic and republican presidents, governers and senates along with their numbers between years `r range(pull(polls_df, year))`. The polls2_df dataset contains information numbers  along with their numbers between years `r range(pull(polls2_df, year))`. The third dataset containd information on unemployment through the years `r range(pull(polls3_df, year))`. The final dataset poll_data_joined is a dataset will all the three datasets joined together from years `r range(pull(poll_data_joined, year))` and the dimensions of the dataset are `r nrow(poll_data_joined)*ncol(poll_data_joined)`. The number of variables in the dataset are `r ncol(poll_data_joined)` and the number of observations in the dataset are `r nrow(poll_data_joined)`. This dataset is now tidy. 
+This dataset contains information on the two party political system in the US. Information on the democratic and republic parties include the following variables `r names(poll_data_joined)`. The polls_df dataset contains information numbers of democratic and republican presidents, governers and senates along with their numbers between years `r range(pull(polls_df, year))`. The polls2_df dataset contains information numbers on the closing value of the s&f stock index along with their numbers between years `r range(pull(polls2_df, year))`. The third dataset containd information on unemployment through the years `r range(pull(polls3_df, year))`. The final dataset poll_data_joined is a dataset will all the three datasets joined together from years `r range(pull(poll_data_joined, year))` and the dimensions of the dataset are `r nrow(poll_data_joined)*ncol(poll_data_joined)`. The number of variables in the dataset are `r ncol(poll_data_joined)` and the number of observations in the dataset are `r nrow(poll_data_joined)`. This dataset is now tidy. 
 

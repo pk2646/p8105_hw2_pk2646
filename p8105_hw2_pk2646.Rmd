@@ -168,9 +168,80 @@ count())
 
 Of the stations that serve the A train, `r print(e)` are ADA compliant.
 
+## Problem 3 
 
+### Part 1 
 
+```{r}
+polls_df = (
+  read_csv(file = "./data/fivethirtyeight_datasets/pols-month.csv") %>% 
+  janitor::clean_names() %>% 
+  separate(mon, into = c("year", "month", "day"), sep = "-")
+  )
 
+polls_df = 
+  mutate(polls_df, 
+         year = as.numeric(year)) %>% 
+  mutate(month = as.numeric(month)) %>% 
+  mutate(day = as.numeric(day)) 
 
+month2_df = 
+  tibble(
+    month = 1:12,
+    month_name = month.name
+  )
+# Add month name to the dataset and president variable to the dataset. 
+polls_df = (
+  left_join(polls_df, month2_df, by = "month") %>% 
+  mutate(president = ifelse(prez_gop == "1", "gop", "dem")) %>% 
+  select(-prez_gop, -prez_dem, -day) %>% 
+  relocate(month_name) %>% 
+    relocate(year)
+  )
+```
+
+### Part 2 
+
+```{r}
+polls2_df = (
+  read_csv(file = "./data/fivethirtyeight_datasets/snp.csv") %>% 
+  janitor::clean_names() %>% 
+  separate(date, into = c("month", "day", "year"), sep = "/") %>% 
+  select(-day) %>% 
+  relocate(month) %>% 
+  relocate(year) %>% 
+  mutate(
+         year = as.numeric(year)) %>% 
+  mutate(month = as.numeric(month))
+  )
+```
+
+## Part 3 
+
+```{r}
+polls3_df = (
+  read_csv(file = "./data/fivethirtyeight_datasets/unemployment.csv") %>% 
+  janitor::clean_names()
+  )
+polls3_df = (
+      pivot_longer(
+        polls3_df,
+        jan:dec,
+        names_to = "month",
+        values_to = "unemployment"
+        ) %>% 
+      mutate(
+            year = as.numeric(year)) %>% 
+      mutate(month = as.numeric(year))
+            )
+  
+```
+
+## Part 4 
+
+```{r}
+poll_data_joined = 
+  left_join(polls_df, polls2_df, polls3_df,  by = c("year", "month"))
+```
 
 
